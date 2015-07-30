@@ -10,7 +10,7 @@ Basically, you just have to provide the manga names. If the name has multiple wo
 #### Clone this repo first
 
 ```bash
-git clone https://github.com/NISH1001/manga-scrapper.git
+git clone https://github.com/NISH1001/manga-scraper.git
 ```
 
 #### Dependencies
