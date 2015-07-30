@@ -11,7 +11,7 @@ def remove_newline(text):
 
 
 """
-MangaScrapper
+MangaScraper
     - accepts space separated manga name
 
 attributes:
@@ -33,7 +33,7 @@ scrap_with_time():
     - slower due to all chapter from first to lastest
     - contains date info too
 """
-class MangaScrapper(object):
+class MangaScraper(object):
 
     ''' accept manga name'''
     def __init__(self, manga_name):
@@ -126,7 +126,7 @@ class MangaScrapper(object):
 
 def main():
     name = input("Enter the manga name(spaces separated): ")
-    manga = MangaScrapper(name)
+    manga = MangaScraper(name)
     chapters = manga.scrap_with_time()
     if chapters:
         manga.display()
