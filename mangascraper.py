@@ -37,7 +37,7 @@ class MangaScraper(object):
 
     ''' accept manga name'''
     def __init__(self, manga_name):
-        self.manga_name = self.manganame_dashed(manga_name)
+        self.manga_name = self.manganame_dashed(manga_name.strip())
         self.url = "http://www.mangapanda.com/"
         self.chapters = []
         self.latest_chapters = []
