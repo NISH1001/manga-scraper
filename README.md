@@ -26,7 +26,7 @@ sudo apt-get install python3-requests
 ```
 
 ```bash
-sudo pip3 install BeautifulSoup4
+sudo pip3 install beautifulsoup4
 ```
 
 ## Usage
