@@ -131,7 +131,7 @@ def main():
     chapters = manga.scrap_with_time()
     #chapters = manga.scrap()
     if chapters:
-        manga.display(with_time=False)
+        manga.display(with_time=True)
 
 
 
