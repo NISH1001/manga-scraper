@@ -129,7 +129,7 @@ def main():
     name = input("Enter the manga name(spaces separated): ")
     manga = MangaScraper(name)
     chapters = manga.scrap_with_time()
-    chapters = manga.scrap()
+    #chapters = manga.scrap()
     if chapters:
         manga.display(with_time=False)
 
