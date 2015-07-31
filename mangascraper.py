@@ -46,7 +46,7 @@ class MangaScraper(object):
     ''' convertes spaces to dash'''
     def manganame_dashed(self, manga):
         name = manga.lower()
-        spaces_removed = re.sub(r'\s+', '-', name)
+        spaces_removed = re.sub(r'(\s+)|(:\s*)+', '-', name)
         return spaces_removed
 
     ''' scrap from latestchapters div'''
@@ -67,7 +67,7 @@ class MangaScraper(object):
                 # find all the chapter list
                 latest_list = div_latest.find_all(['li'])
 
-                self.latest_chapters = [ re.sub(r'\n', '', x.get_text()) for x in latest_list if x ]
+                self.latest_chapters = [ remove_newline(x.get_text()) for x in latest_list if x ]
                 return self.latest_chapters
 
         except MangaError as merr:
@@ -100,36 +100,38 @@ class MangaScraper(object):
             merr.display()
             return ''
 
-    def display(self):
+    def display(self, with_time=False):
         print(re.sub(r'[-]+', ' ', self.manga_name), " : latest chapters")
         print("-"*80)
-        """
-        for chapter in self.latest_chapters:
-            print(chapter)
-        """
-        # latest_chapters_time is tuple -> (chapter full name, dateinfo)
-        for chapter in self.latest_chapters_time:
-            chapter_full = chapter[0]
-            chapter_name = ''.join( re.split(r':', chapter_full)[1] )
-            chapter_num = ''.join(re.findall(r'\d+\s+', chapter_full))
 
-            #format_string = "mm/md/YYYY"
-            date_str = chapter[1]
-            date_list = date_str.split('/')
+        if not with_time:
+            for chapter in self.latest_chapters:
+                print(chapter)
 
-            # year, month, day
-            dt = datetime.date(int(date_list[2]), int(date_list[0]), int(date_list[1]))
-            humanize = dt.strftime("%A %B %d, %Y")
+        else:
+            # latest_chapters_time is tuple -> (chapter full name, dateinfo)
+            for chapter in self.latest_chapters_time:
+                chapter_full = chapter[0]
+                chapter_name = ''.join( re.split(r':', chapter_full)[-1:] )
+                chapter_num = ''.join(re.findall(r'\d+\s+', chapter_full))
 
-            print("{:5s} : {:50s} {}".format(chapter_num, chapter_name, humanize))
+                #format_string = "mm/md/YYYY"
+                date_str = chapter[1]
+                date_list = date_str.split('/')
+
+                # year, month, day
+                dt = datetime.date(int(date_list[2]), int(date_list[0]), int(date_list[1]))
+                humanize = dt.strftime("%A %B %d, %Y")
+                print("{:5s} : {:50s} {}".format(chapter_num, chapter_name, humanize))
 
 
 def main():
     name = input("Enter the manga name(spaces separated): ")
     manga = MangaScraper(name)
     chapters = manga.scrap_with_time()
+    chapters = manga.scrap()
     if chapters:
-        manga.display()
+        manga.display(with_time=False)
 
 
 
