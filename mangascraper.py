@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import re
 import datetime
 from exception import MangaError
+import sys
 
 def remove_newline(text):
     return re.sub(r'\n+', '', text)
@@ -105,10 +106,10 @@ class MangaScraper(object):
                     if data:
                         self.latest_chapters_time.append(tuple(data))
                 return self.latest_chapters_time
-
         except MangaError as merr:
             merr.display()
             return ''
+
     def __scrap_properties(self,extractor):
         properties_div = extractor.find("div", {'id' : 'mangaproperties'})
         rows = properties_div.find_all('tr')[:4]
@@ -130,8 +131,10 @@ class MangaScraper(object):
             # latest_chapters_time is tuple -> (chapter full name, dateinfo)
             for chapter in self.latest_chapters_time:
                 chapter_full = chapter[0]
-                chapter_name = ''.join( re.split(r':', chapter_full)[-1:] )
-                chapter_num = ''.join(re.findall(r'\d+\s+', chapter_full)[-1:])
+                splitted = re.split(r':', chapter_full)
+
+                chapter_num = ''.join(re.findall(r'\d+\s+', splitted[0]))
+                chapter_name = splitted[1]
 
                 #format_string = "mm/md/YYYY"
                 date_str = chapter[1]
@@ -144,7 +147,12 @@ class MangaScraper(object):
 
 
 def main():
-    name = input("Enter the manga name(spaces separated): ")
+    name = ''
+    if len(sys.argv)>1:
+        name = ' '.join(sys.argv[1:])
+    else:
+        name = input("Enter the manga name(spaces separated): ")
+
     manga = MangaScraper(name)
     chapters = manga.scrap_with_time()
     #chapters = manga.scrap()
